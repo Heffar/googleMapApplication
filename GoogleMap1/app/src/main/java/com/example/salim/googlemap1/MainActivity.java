@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
 
     //Liste des coordonnées
-    List<StringBuilder> coordonneeList;
+    List<String> coordonneeList;
 
     //Liste des coordonnees avec LatLng
     List<LatLng> latlngList;
@@ -103,10 +103,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         mapFragment= (MapFragment) fragmentManager.findFragmentById(R.id.map);
 
         //Récupérer le chemin de sdcard
-        //sdcard=Environment.getExternalStorageDirectory();
+    //    sdcard=Environment.getExternalStorageDirectory();
+
 
         //Récupérer le fichier concerné dans internal storage
-        file=new File("/data/","datalog.txt");
+        file=new File("/storage/sdcard1/","datalog.txt");
 
         format= NumberFormat.getInstance(Locale.US);
 
@@ -246,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
                     MainActivity.this.googleMap=googleMap;
 
                     //On peut ajouter des markers, move camera etc..
-                  googleMap.moveCamera(CameraUpdateFactory.zoomBy(3));
+                  googleMap.moveCamera(CameraUpdateFactory.zoomBy(1));
 
                   /*
                   * Pour cette dernière instruction, il faut les permissions
@@ -294,8 +295,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         });
     }
 
-    private List<StringBuilder> getStringFile() {
-        StringBuilder text = null;
+    private List<String> getStringFile() {
+       // StringBuilder text = new StringBuilder();
         String line = "";
 
         try {
@@ -303,15 +304,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
 
             while ((line = br.readLine()) != null) {
-                text.append(line);
-                coordonneeList.add(text);
-               // text.append(System.getProperty("line.separator"));
+                //text.append(line);
+                coordonneeList.add(line);
+            //   text.append(System.getProperty("line.separator"));
 
 
             }
             br.close();
         } catch (IOException e) {
-            Log.d("fais chier",e.getMessage());
+            e.printStackTrace();
         }
         return coordonneeList;
     }
@@ -330,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     }*/
 
     //Récupérer la chaine de caractère qui concerne la longitude
-    private double getLongitude(StringBuilder coordonnees) {
+    private double getLongitude(String coordonnees) {
 
         int i = 0;
         //Passer la chaine jusqu'à arriver à ;
@@ -342,7 +343,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
         return Double.parseDouble(longi);
     }
     //Récupérer la chaine de caractère concernant la latitude
-    private double getLatitude(StringBuilder coordonnees) {
+    private double getLatitude(String coordonnees) {
 
         int i = 0;
         //Parcourir la chaine jusqu'à ';'
@@ -363,7 +364,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 /*        DialogAdapter dialogAdapter=new DialogAdapter();
         dialogAdapter.show(getSupportFragmentManager(),"add dialog");
 */
-       // addMarkerFromList(latlngList);
+        addMarkerFromList(latlngList);
     }
 
 
@@ -425,7 +426,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
 
     }
 
-    private void getCoordonneeFromString(List<StringBuilder> listString){
+    private void getCoordonneeFromString(List<String> listString){
         int i=0;
         double lon;
         double lat;
@@ -444,8 +445,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener,
     //Ajout des marqueurs depuis le fichier
     private void addMarkerFromList(List<LatLng> coordonneeList){
               int i=0;
-                while (i < 2){
-                    googleMap.addMarker(new MarkerOptions().position(coordonneeList.get(i)));
+                while (i < coordonneeList.size()){
+            Log.d("Element","coordonnees"+i+": "+coordonneeList.get(i) );
+
+                   googleMap.addMarker(new MarkerOptions().position(coordonneeList.get(i)));
+                    i++;
                 }
             }
 
